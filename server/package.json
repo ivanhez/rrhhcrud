@@ -1,0 +1,22 @@
+{
+    "name": "rrhnh-backend",
+    "version": "1.0.0",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js",
+      "dev": "nodemon app.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^16.3.1",
+      "express": "^4.18.2",
+      "mysql2": "^3.2.0"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.20"
+    }
+  }
+  
