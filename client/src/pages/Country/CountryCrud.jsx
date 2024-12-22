@@ -67,6 +67,7 @@ function CountryCrud() {
         <button type="submit">{editing ? 'Actualizar' : 'Crear'}</button>
       </form>
 
+        <div className="table-responsive">
       <table>
         <thead>
           <tr>
@@ -88,6 +89,7 @@ function CountryCrud() {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

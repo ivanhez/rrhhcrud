@@ -182,7 +182,8 @@ function CompanyCrud() {
         </div>
         <button type="submit">{editing ? 'Actualizar' : 'Crear'}</button>
       </form>
-
+    
+    <div className="table-responsive">
       <table border="1" cellPadding="5" style={{ marginTop: '1rem' }}>
         <thead>
           <tr>
@@ -218,6 +219,7 @@ function CompanyCrud() {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

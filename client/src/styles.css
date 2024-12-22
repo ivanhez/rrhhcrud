@@ -104,32 +104,41 @@
     border-top: 1px solid #ccc;
   }
   
-  /* Secciones */
-  .section-title {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #444;
-  }
-  .sidebar {
+
+
+  /* client/src/components/Navbar.css */
+
+/* Sidebar en desktop (por defecto) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 220px;
     min-width: 220px;
-    background-color: #1e1e2f;
     height: 100vh;
+    background-color: #1e1e2f;
     padding: 1.5rem 1rem;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    position: fixed; /* Fijo a la izquierda */
-    top: 0;
-    left: 0;
+    transition: transform 0.3s ease;
+    z-index: 999; /* Aseguramos que se superponga */
   }
   
+  /* El contenedor del logo y el botón hamburguesa */
+  .sidebar-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    margin-bottom: 2rem;
+  }
+  
+  /* Logo */
   .logo {
     display: flex;
     align-items: center;
-    margin-bottom: 2rem;
   }
   
   .logo-icon {
@@ -143,6 +152,17 @@
     font-weight: bold;
   }
   
+  /* Botón hamburguesa (por defecto oculto en desktop) */
+  .hamburger {
+    display: none; 
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  /* NavLinks */
   .nav-links {
     display: flex;
     flex-direction: column;
@@ -150,6 +170,7 @@
     width: 100%;
   }
   
+  /* Cada enlace */
   .nav-links a {
     color: #fff;
     text-decoration: none;
@@ -160,13 +181,105 @@
     display: block;
     box-sizing: border-box;
   }
-  
   .nav-links a:hover {
     background-color: #34344c;
   }
-  
   .active-link {
     background-color: #45456c;
     font-weight: bold;
+  }
+  
+  /* ======= Responsividad ======= */
+  /* Para pantallas más pequeñas que 768px:
+     - la sidebar se vuelve horizontal (o se oculta) 
+     - el botón hamburguesa se muestra 
+  */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      transform: translateY(0); /* Aseguramos que esté en su lugar */
+    }
+  
+    .sidebar-header {
+      margin-bottom: 1rem;
+    }
+  
+    /* Mostramos el botón hamburguesa en móvil */
+    .hamburger {
+      display: block;
+    }
+  
+    /* Por defecto, escondemos los links (menuOpen = false => no .show) */
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    /* Cuando el menú está abierto (clase .show), se muestran los links */
+    .nav-links.show {
+      display: flex;
+      background-color: #1e1e2f;
+      padding: 0.5rem;
+    }
+  }
+  /* client/src/styles.css */
+/* client/src/styles.css */
+
+/* Layout principal en escritorio */
+.layout {
+    display: flex;
+  }
+  
+  /* Contenido en escritorio */
+  .content {
+    margin-left: 220px;
+    padding: 2rem;
+    width: calc(100% - 220px);
+    min-height: 100vh;
+    background-color: #f3f4f6;
+  }
+  
+  /* Responsivo para móvil */
+  @media (max-width: 768px) {
+    .layout {
+      flex-direction: column;
+    }
+  
+    .content {
+      margin-left: 0;           /* Sin sidebar fijo */
+      width: 100%;
+      min-height: auto;
+    }
+  }
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;           /* Desplazamiento horizontal */
+    -webkit-overflow-scrolling: touch; /* Suaviza el scroll en móviles iOS */
+    margin-top: 1rem;
+    border-radius: 6px;         /* Si deseas bordes redondeados */
+    background-color: #fff;      /* Fondo blanco para que se note el scroll */
+    padding: 0.5rem;            /* Algo de padding para que no pegue al borde */
+  }
+  
+  /* Mantén tu tabla normal dentro */
+  .table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* O el ancho mínimo que desees */
+    /* Resto de estilos de tu tabla */
+  }
+  
+  /* Ejemplo de estilos para thead, th, td */
+  .table-responsive thead {
+    background-color: #3f3f63;
+    color: #fff;
+  }
+  .table-responsive th,
+  .table-responsive td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e2e2e2;
   }
   

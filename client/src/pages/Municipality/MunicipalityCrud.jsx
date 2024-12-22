@@ -1,63 +1,66 @@
-import React, { useEffect, useState } from 'react'
-import api from '../../services/api'
+import React, { useEffect, useState } from "react";
+import api from "../../services/api";
 
 function MunicipalityCrud() {
-  const [municipalities, setMunicipalities] = useState([])
-  const [departments, setDepartments] = useState([])
-  const [name, setName] = useState('')
-  const [departmentId, setDepartmentId] = useState('')
-  const [editing, setEditing] = useState(false)
-  const [editId, setEditId] = useState(null)
+  const [municipalities, setMunicipalities] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [name, setName] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editId, setEditId] = useState(null);
 
   const fetchData = async () => {
     const [munRes, deptRes] = await Promise.all([
-      api.get('/municipalities'),
-      api.get('/departments')
-    ])
-    setMunicipalities(munRes.data)
-    setDepartments(deptRes.data)
-  }
+      api.get("/municipalities"),
+      api.get("/departments"),
+    ]);
+    setMunicipalities(munRes.data);
+    setDepartments(deptRes.data);
+  };
 
   const createMunicipality = async () => {
-    await api.post('/municipalities', { name, department_id: departmentId })
-    setName('')
-    setDepartmentId('')
-    fetchData()
-  }
+    await api.post("/municipalities", { name, department_id: departmentId });
+    setName("");
+    setDepartmentId("");
+    fetchData();
+  };
 
   const updateMunicipality = async () => {
-    await api.put(`/municipalities/${editId}`, { name, department_id: departmentId })
-    setName('')
-    setDepartmentId('')
-    setEditing(false)
-    setEditId(null)
-    fetchData()
-  }
+    await api.put(`/municipalities/${editId}`, {
+      name,
+      department_id: departmentId,
+    });
+    setName("");
+    setDepartmentId("");
+    setEditing(false);
+    setEditId(null);
+    fetchData();
+  };
 
   const deleteMunicipality = async (id) => {
-    await api.delete(`/municipalities/${id}`)
-    fetchData()
-  }
+    await api.delete(`/municipalities/${id}`);
+    fetchData();
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (editing) {
-      updateMunicipality()
+      updateMunicipality();
     } else {
-      createMunicipality()
+      createMunicipality();
     }
-  }
+  };
 
   const handleEdit = (municipality) => {
-    setEditing(true)
-    setEditId(municipality.id)
-    setName(municipality.name)
-    setDepartmentId(municipality.department_id)
-  }
+    setEditing(true);
+    setEditId(municipality.id);
+    setName(municipality.name);
+    setDepartmentId(municipality.department_id);
+  };
 
   return (
     <div>
@@ -87,34 +90,38 @@ function MunicipalityCrud() {
             ))}
           </select>
         </div>
-        <button type="submit">{editing ? 'Actualizar' : 'Crear'}</button>
+        <button type="submit">{editing ? "Actualizar" : "Crear"}</button>
       </form>
 
-      <table border="1" cellPadding="5" style={{ marginTop: '1rem' }}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Municipio</th>
-            <th>Departamento</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {municipalities.map((mun) => (
-            <tr key={mun.id}>
-              <td>{mun.id}</td>
-              <td>{mun.name}</td>
-              <td>{mun.department_name}</td>
-              <td>
-                <button onClick={() => handleEdit(mun)}>Editar</button>
-                <button onClick={() => deleteMunicipality(mun.id)}>Eliminar</button>
-              </td>
+      <div className="table-responsive">
+        <table border="1" cellPadding="5" style={{ marginTop: "1rem" }}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Municipio</th>
+              <th>Departamento</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {municipalities.map((mun) => (
+              <tr key={mun.id}>
+                <td>{mun.id}</td>
+                <td>{mun.name}</td>
+                <td>{mun.department_name}</td>
+                <td>
+                  <button onClick={() => handleEdit(mun)}>Editar</button>
+                  <button onClick={() => deleteMunicipality(mun.id)}>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-  )
+  );
 }
 
-export default MunicipalityCrud
+export default MunicipalityCrud;
