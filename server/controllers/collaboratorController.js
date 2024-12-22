@@ -15,7 +15,6 @@ exports.getCollaboratorById = async (req, res) => {
     const collaborator = await Collaborator.findById(id);
     if (!collaborator) return res.status(404).json({ message: 'Colaborador no encontrado' });
 
-    // Además, traemos las empresas a las que pertenece
     const companies = await Collaborator.findCompaniesByCollaborator(id);
     res.json({ collaborator, companies });
   } catch (error) {
@@ -54,7 +53,6 @@ exports.deleteCollaborator = async (req, res) => {
   }
 };
 
-// Asignar Colaborador a una Empresa
 exports.assignToCompany = async (req, res) => {
   try {
     const { collaboratorId, companyId } = req.body;
@@ -65,7 +63,6 @@ exports.assignToCompany = async (req, res) => {
   }
 };
 
-// Remover Colaborador de una Empresa
 exports.removeFromCompany = async (req, res) => {
   try {
     const { collaboratorId, companyId } = req.body;

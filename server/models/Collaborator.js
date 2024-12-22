@@ -2,7 +2,6 @@ const db = require('../db');
 
 const Collaborator = {
   findAll: async () => {
-    // Se mostrará la información básica del colaborador
     const [rows] = await db.query('SELECT * FROM collaborators');
     return rows;
   },
@@ -28,7 +27,6 @@ const Collaborator = {
     await db.query('DELETE FROM collaborators WHERE id = ?', [id]);
   },
 
-  // Relacionar colaborador con empresa (N-N)
   addToCompany: async (company_id, collaborator_id) => {
     await db.query(
       'INSERT IGNORE INTO company_collaborator (company_id, collaborator_id) VALUES (?, ?)',
@@ -42,7 +40,6 @@ const Collaborator = {
     );
   },
 
-  // Obtener las empresas a las que pertenece un colaborador
   findCompaniesByCollaborator: async (collaborator_id) => {
     const [rows] = await db.query(`
       SELECT co.*
