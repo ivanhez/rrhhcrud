@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function Home() {
   return (
@@ -6,7 +6,7 @@ function Home() {
       <h2>Bienvenido al Sistema de Gestión de Colaboradores</h2>
       <p>Seleccione una opción en el menú para comenzar.</p>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

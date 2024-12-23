@@ -1,12 +1,12 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import CountryCrud from './pages/Country/CountryCrud'
-import DepartmentCrud from './pages/Department/DepartmentCrud'
-import MunicipalityCrud from './pages/Municipality/MunicipalityCrud'
-import CompanyCrud from './pages/Company/CompanyCrud'
-import CollaboratorCrud from './pages/Collaborator/CollaboratorCrud'
-import Layout from './components/Layout'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import CountryCrud from "./pages/Country/CountryCrud";
+import DepartmentCrud from "./pages/Department/DepartmentCrud";
+import MunicipalityCrud from "./pages/Municipality/MunicipalityCrud";
+import CompanyCrud from "./pages/Company/CompanyCrud";
+import CollaboratorCrud from "./pages/Collaborator/CollaboratorCrud";
+import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path="/collaborators" element={<CollaboratorCrud />} />
       </Routes>
     </Layout>
-  )
+  );
 }
 
-export default App
+export default App;

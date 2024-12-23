@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen)
-  }
+  const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
-    <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
+    <div className={`sidebar ${menuOpen ? "open" : ""}`}>
       <div className="sidebar-header">
         <div className="logo">
           <span className="logo-icon"></span>
@@ -19,53 +17,53 @@ function Navbar() {
           ☰
         </button>
       </div>
-      <nav className={`nav-links ${menuOpen ? 'show' : ''}`}>
-        <NavLink 
-          to="/" 
+      <nav className={`nav-links ${menuOpen ? "show" : ""}`}>
+        <NavLink
+          to="/"
           end
           onClick={() => setMenuOpen(false)}
-          className={({ isActive }) => isActive ? 'active-link' : ''}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           Inicio
         </NavLink>
-        <NavLink 
+        <NavLink
           to="/countries"
           onClick={() => setMenuOpen(false)}
-          className={({ isActive }) => isActive ? 'active-link' : ''}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           Países
         </NavLink>
-        <NavLink 
+        <NavLink
           to="/departments"
           onClick={() => setMenuOpen(false)}
-          className={({ isActive }) => isActive ? 'active-link' : ''}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           Departamentos
         </NavLink>
-        <NavLink 
+        <NavLink
           to="/municipalities"
           onClick={() => setMenuOpen(false)}
-          className={({ isActive }) => isActive ? 'active-link' : ''}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           Municipios
         </NavLink>
-        <NavLink 
+        <NavLink
           to="/companies"
           onClick={() => setMenuOpen(false)}
-          className={({ isActive }) => isActive ? 'active-link' : ''}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           Empresas
         </NavLink>
-        <NavLink 
+        <NavLink
           to="/collaborators"
           onClick={() => setMenuOpen(false)}
-          className={({ isActive }) => isActive ? 'active-link' : ''}
+          className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           Colaboradores
         </NavLink>
       </nav>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

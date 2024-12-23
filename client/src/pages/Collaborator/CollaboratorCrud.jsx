@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 function CollaboratorCrud() {
   const [collaborators, setCollaborators] = useState([]);
+  const [companies, setCompanies] = useState([]);
+
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [edad, setEdad] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -10,24 +14,39 @@ function CollaboratorCrud() {
   const [editing, setEditing] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const [allCompanies, setAllCompanies] = useState([]);
+  // Para gestionar asignaciones
   const [selectedCollaborator, setSelectedCollaborator] = useState(null);
 
   const fetchCollaborators = async () => {
-    const res = await api.get("/collaborators");
-    setCollaborators(res.data);
+    try {
+      const res = await api.get("/collaborators");
+      setCollaborators(res.data);
+    } catch (error) {
+      console.error(error);
+      Swal.fire(
+        "Error",
+        "No se pudo cargar la lista de colaboradores",
+        "error"
+      );
+    }
   };
 
-  const fetchAllCompanies = async () => {
-    const res = await api.get("/companies");
-    setAllCompanies(res.data);
+  const fetchCompanies = async () => {
+    try {
+      const res = await api.get("/companies");
+      setCompanies(res.data);
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "No se pudo cargar la lista de empresas", "error");
+    }
   };
 
   useEffect(() => {
     fetchCollaborators();
-    fetchAllCompanies();
+    fetchCompanies();
   }, []);
 
+  // Crear o actualizar colaborador
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -36,18 +55,42 @@ function CollaboratorCrud() {
       telefono,
       correo_electronico: correoElectronico,
     };
-    if (editing) {
-      await api.put(`/collaborators/${editId}`, payload);
-      setEditing(false);
-      setEditId(null);
-    } else {
-      await api.post("/collaborators", payload);
+    try {
+      if (editing) {
+        await api.put(`/collaborators/${editId}`, payload);
+        Swal.fire({
+          icon: "success",
+          title: "Actualizado",
+          text: "Colaborador actualizado correctamente",
+          toast: true,
+          position: "top-end",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        setEditing(false);
+        setEditId(null);
+      } else {
+        await api.post("/collaborators", payload);
+        Swal.fire({
+          icon: "success",
+          title: "Creado",
+          text: "Colaborador creado exitosamente",
+          toast: true,
+          position: "top-end",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+      // Limpiar
+      setNombreCompleto("");
+      setEdad("");
+      setTelefono("");
+      setCorreoElectronico("");
+      fetchCollaborators();
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "No se pudo procesar al colaborador", "error");
     }
-    setNombreCompleto("");
-    setEdad("");
-    setTelefono("");
-    setCorreoElectronico("");
-    fetchCollaborators();
   };
 
   const handleEdit = (coll) => {
@@ -60,43 +103,95 @@ function CollaboratorCrud() {
   };
 
   const handleDelete = async (id) => {
-    await api.delete(`/collaborators/${id}`);
-    fetchCollaborators();
-    if (id === editId) {
-      setEditing(false);
-      setEditId(null);
-      setNombreCompleto("");
-      setEdad("");
-      setTelefono("");
-      setCorreoElectronico("");
+    try {
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Eliminarás a este colaborador definitivamente",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+      if (result.isConfirmed) {
+        await api.delete(`/collaborators/${id}`);
+        Swal.fire("Eliminado", "El colaborador fue eliminado", "success");
+        fetchCollaborators();
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "No se pudo eliminar al colaborador", "error");
     }
   };
 
+  // Gestionar asignación de empresas
   const handleManageCompanies = async (collaboratorId) => {
-    const res = await api.get(`/collaborators/${collaboratorId}`);
-    const data = {
-      ...res.data.collaborator,
-      companies: res.data.companies,
-    };
-    setSelectedCollaborator(data);
+    try {
+      const res = await api.get(`/collaborators/${collaboratorId}`);
+      const data = {
+        ...res.data.collaborator,
+        companies: res.data.companies,
+      };
+      setSelectedCollaborator(data);
+    } catch (error) {
+      console.error(error);
+      Swal.fire(
+        "Error",
+        "No se pudo cargar la información del colaborador",
+        "error"
+      );
+    }
   };
 
   const handleAssignCompany = async (companyId) => {
     if (!selectedCollaborator) return;
-    await api.post("/collaborators/assign", {
-      collaboratorId: selectedCollaborator.id,
-      companyId,
-    });
-    handleManageCompanies(selectedCollaborator.id);
+    try {
+      await api.post("/collaborators/assign", {
+        collaboratorId: selectedCollaborator.id,
+        companyId,
+      });
+      Swal.fire({
+        icon: "success",
+        title: "Asignado",
+        text: "Colaborador asignado a empresa",
+        toast: true,
+        position: "top-end",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      handleManageCompanies(selectedCollaborator.id);
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "No se pudo asignar la empresa", "error");
+    }
   };
 
   const handleRemoveCompany = async (companyId) => {
     if (!selectedCollaborator) return;
-    await api.post("/collaborators/remove", {
-      collaboratorId: selectedCollaborator.id,
-      companyId,
-    });
-    handleManageCompanies(selectedCollaborator.id);
+    try {
+      const result = await Swal.fire({
+        title: "¿Remover empresa?",
+        text: "Se removerá la relación con este colaborador",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, remover",
+        cancelButtonText: "Cancelar",
+      });
+      if (result.isConfirmed) {
+        await api.post("/collaborators/remove", {
+          collaboratorId: selectedCollaborator.id,
+          companyId,
+        });
+        Swal.fire(
+          "Removido",
+          "El colaborador fue removido de la empresa",
+          "success"
+        );
+        handleManageCompanies(selectedCollaborator.id);
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "No se pudo remover la empresa", "error");
+    }
   };
 
   const isAssigned = (company) => {
@@ -114,6 +209,7 @@ function CollaboratorCrud() {
             type="text"
             value={nombreCompleto}
             onChange={(e) => setNombreCompleto(e.target.value)}
+            placeholder="Ej. Juan Pérez"
             required
           />
         </div>
@@ -123,6 +219,7 @@ function CollaboratorCrud() {
             type="number"
             value={edad}
             onChange={(e) => setEdad(e.target.value)}
+            placeholder="Ej. 30"
             required
           />
         </div>
@@ -132,6 +229,7 @@ function CollaboratorCrud() {
             type="text"
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
+            placeholder="5555-5555"
           />
         </div>
         <div>
@@ -140,11 +238,10 @@ function CollaboratorCrud() {
             type="email"
             value={correoElectronico}
             onChange={(e) => setCorreoElectronico(e.target.value)}
+            placeholder="correo@ejemplo.com"
           />
         </div>
-        <button type="submit">
-          {editing ? "Actualizar Colaborador" : "Crear Colaborador"}
-        </button>
+        <button type="submit">{editing ? "Actualizar" : "Crear"}</button>
       </form>
 
       <hr />
@@ -184,13 +281,11 @@ function CollaboratorCrud() {
           </tbody>
         </table>
       </div>
+      {/* Sección para asignar/quitar empresas al colaborador seleccionado */}
       {selectedCollaborator && (
         <div style={{ marginTop: "2rem" }}>
-          <h3>
-            Empresas para el colaborador: {selectedCollaborator.nombre_completo}
-          </h3>
-          <p>ID Colaborador: {selectedCollaborator.id}</p>
-
+          <h4>Empresas para: {selectedCollaborator.nombre_completo}</h4>
+          <p>ID: {selectedCollaborator.id}</p>
           <div className="table-responsive">
             <table>
               <thead>
@@ -202,24 +297,20 @@ function CollaboratorCrud() {
                 </tr>
               </thead>
               <tbody>
-                {allCompanies.map((company) => {
-                  const assigned = isAssigned(company);
+                {companies.map((co) => {
+                  const assigned = isAssigned(co);
                   return (
-                    <tr key={company.id}>
-                      <td>{company.id}</td>
-                      <td>{company.nombre_comercial}</td>
-                      <td>{company.nit}</td>
+                    <tr key={co.id}>
+                      <td>{co.id}</td>
+                      <td>{co.nombre_comercial}</td>
+                      <td>{co.nit}</td>
                       <td>
                         {assigned ? (
-                          <button
-                            onClick={() => handleRemoveCompany(company.id)}
-                          >
+                          <button onClick={() => handleRemoveCompany(co.id)}>
                             Remover
                           </button>
                         ) : (
-                          <button
-                            onClick={() => handleAssignCompany(company.id)}
-                          >
+                          <button onClick={() => handleAssignCompany(co.id)}>
                             Asignar
                           </button>
                         )}
