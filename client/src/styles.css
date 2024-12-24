@@ -39,9 +39,8 @@ body {
   min-height: 100vh;
 }
 
-
 .content {
-  margin-left: 220px; 
+  margin-left: 220px;
   width: calc(100% - 220px);
   padding: 2rem;
   background-color: #f3f4f6;
@@ -142,16 +141,19 @@ table {
   overflow: hidden;
   animation: fadeIn 0.5s ease-in-out;
 }
+
 thead {
   background-color: #374f8a;
   color: #fff;
 }
+
 th,
 td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e2e2e2;
   text-align: left;
 }
+
 tbody tr:hover {
   background-color: #f0f0f0;
   cursor: default;
@@ -166,11 +168,13 @@ tbody tr:hover {
   background-color: #fff;
   padding: 0.5rem;
 }
+
 .table-responsive table {
   min-width: 600px;
 }
+
 .table-responsive thead {
-  background-color: #3f3f63; 
+  background-color: #3f3f63;
   color: #fff;
 }
 
@@ -201,6 +205,7 @@ hr {
   justify-content: flex-start;
   transition: transform 0.3s ease;
   z-index: 999;
+}
 
 .sidebar-header {
   display: flex;
@@ -237,7 +242,6 @@ hr {
   transform: scale(1.1);
 }
 
-/* Enlaces del sidebar */
 .nav-links {
   display: flex;
   flex-direction: column;
@@ -268,7 +272,7 @@ hr {
     padding: 1rem;
   }
   .hamburger {
-    display: block; 
+    display: block;
   }
   .nav-links {
     display: none;
